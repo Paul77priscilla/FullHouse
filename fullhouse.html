@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Room</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+        }
+        input, button {
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #player-list {
+            text-align: left;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to the Game!</h1>
+        <div id="user-input">
+            <input type="text" id="username" placeholder="Enter your username" required />
+            <button onclick="chooseRole()">Continue</button>
+        </div>
+        <div id="role-selection" style="display: none;">
+            <h2>Choose an Option</h2>
+            <button onclick="selectRole('admin')">Admin</button>
+            <button onclick="selectRole('player')">Player</button>
+        </div>
+        <div id="admin-panel" style="display: none;">
+            <h2>Admin Panel</h2>
+            <p>Room created successfully by <span id="admin-username"></span>!</p>
+            <p>Room Code: <span id="room-code"></span></p>
+            <h3>Players in Lobby:</h3>
+            <div id="player-list">
+                <p>No players joined yet.</p>
+            </div>
+            <h3>Allot Chips to Players:</h3>
+            <div id="chip-allocation"></div>
+            <button onclick="startGame()">Start Game</button>
+        </div>
+        <div id="player-panel" style="display: none;">
+            <h2>Player Panel</h2>
+            <input type="text" id="room-code-input" placeholder="Enter Room Code" required />
+            <button onclick="joinRoom()">Join Room</button>
+        </div>
+    </div>
+
+    <script>
+        let roomCode = Math.floor(1000 + Math.random() * 9000);
+        let players = [];
+
+        function chooseRole() {
+            const username = document.getElementById('username').value;
+            if (username) {
+                document.getElementById('user-input').style.display = 'none';
+                document.getElementById('role-selection').style.display = 'block';
+            } else {
+                alert('Please enter a username.');
+            }
+        }
+
+        function selectRole(role) {
+            const username = document.getElementById('username').value;
+
+            if (role === 'admin') {
+                document.getElementById('role-selection').style.display = 'none';
+                document.getElementById('admin-panel').style.display = 'block';
+                document.getElementById('admin-username').innerText = username;
+                document.getElementById('room-code').innerText = roomCode;
+            } else if (role === 'player') {
+                document.getElementById('role-selection').style.display = 'none';
+                document.getElementById('player-panel').style.display = 'block';
+            }
+        }
+
+        function startGame() {
+            alert('Game started by Admin!');
+        }
+
+        function joinRoom() {
+            const enteredCode = document.getElementById('room-code-input').value;
+            const username = document.getElementById('username').value;
+            if (enteredCode == roomCode) {
+                players.push(username);
+                updatePlayerList();
+                alert('Joined room successfully!');
+            } else {
+                alert('Invalid room code. Please try again.');
+            }
+        }
+
+        function updatePlayerList() {
+            const playerListDiv = document.getElementById('player-list');
+            const chipAllocationDiv = document.getElementById('chip-allocation');
+            playerListDiv.innerHTML = '';
+            chipAllocationDiv.innerHTML = '';
+
+            players.forEach(player => {
+                const playerElement = document.createElement('p');
+                playerElement.innerText = player;
+                playerListDiv.appendChild(playerElement);
+
+                const chipInput = document.createElement('input');
+                chipInput.type = 'number';
+                chipInput.placeholder = `Chips for ${player}`;
+                chipAllocationDiv.appendChild(chipInput);
+            });
+        }
+    </script>
+</body>
+</html>
